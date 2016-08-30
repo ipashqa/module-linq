@@ -1,0 +1,9 @@
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\bin\Debug\Task.exe.config
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\bin\Debug\Task.exe
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\bin\Debug\Task.pdb
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\Task.csprojResolveAssemblyReference.cache
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\Task.Properties.Resources.resources
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\SampleSupport.SampleForm.resources
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\Task.csproj.GenerateResource.Cache
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\Task.exe
+D:\!learning\!Mentroing D1-D2\linq module\HW\Task\Task\obj\Debug\Task.pdb
