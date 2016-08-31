@@ -48,6 +48,15 @@ namespace SampleQueries
         [Description("2. Для каждого клиента составьте список поставщиков, находящихся в той же стране и том же городе. Сделайте задания с использованием группировки и без.")]
         public void Linq02()
         {
+			//Мой вариант. Без группировки
+			IEnumerable mySupplierForCustomer = dataSource.Customers.Select(c => new
+			{
+				CompanyName = c.CompanyName,
+				Country = c.Country,
+				City = c.City,
+				Suppliers = dataSource.Suppliers.Where(s => s.Country == c.Country && s.City == c.City)
+			}).OrderBy(c => c.City).OrderBy(c => c.Country);
+
             var suppliersForCustomer1 = dataSource.Customers.GroupJoin(
                 dataSource.Suppliers,
                 (Customer cust) => new { cust.Country, cust.City },
@@ -82,7 +91,7 @@ namespace SampleQueries
             var suppliersForCustomer2 = groupedCustomers.Join(
                 groupedSuppliers,
                 cust => cust.Place,
-                suppl => suppl.Place,
+                suppl => suppl.Place == null ? null : suppl.Place ,
                 (customers, suppliers) => customers.Customers.Select(cust => new
                 {
                     cust.CompanyName,
@@ -92,9 +101,10 @@ namespace SampleQueries
                 }))
                 .SelectMany(customer => customer);
 
-            this.DumpIEnumerable(suppliersForCustomer1, 1);
-            this.DumpIEnumerable(suppliersForCustomer2, 1);
-    }
+			this.DumpIEnumerable(mySupplierForCustomer, 1);
+			this.DumpIEnumerable(suppliersForCustomer1, 1);
+			this.DumpIEnumerable(suppliersForCustomer2, 1);
+		}
 
     [Category("Homework")]
     [Title("Task03")]
