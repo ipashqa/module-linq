@@ -55,7 +55,7 @@ namespace SampleQueries
 				Country = c.Country,
 				City = c.City,
 				Suppliers = dataSource.Suppliers.Where(s => s.Country == c.Country && s.City == c.City)
-			}).OrderBy(c => c.City).OrderBy(c => c.Country);
+			}).OrderBy(c => c.Country).ThenBy(c => c.Country);
 
             var suppliersForCustomer1 = dataSource.Customers.GroupJoin(
                 dataSource.Suppliers,
@@ -122,6 +122,7 @@ namespace SampleQueries
     [Description("4. Выдайте список клиентов с указанием, начиная с какого месяца какого года они стали клиентами (принять за таковые месяц и год самого первого заказа)")]
     public void Linq04()
     {
+		//Это будет работать, если у нас коллекция Orders уже отсортирована по дате. Для надёжности надо брать Min вместо First
         var customers = dataSource.Customers
             .Select(c => new { Customer = c.CompanyName, CustomerFrom = c.Orders.First().OrderDate.ToString("MM.yyyy") });
 
@@ -133,7 +134,18 @@ namespace SampleQueries
     [Description("5. Сделайте предыдущее задание, но выдайте список отсортированным по году, месяцу, оборотам клиента (от максимального к минимальному) и имени клиента")]
     public void Linq05()
     {
-        var customers = dataSource.Customers
+			//то же замечание, что и в предидущем примере. Плюс, если мы сортируем по оборотам, то надо их тоже выводить. Иначе для клиента это будет не очевидно,
+			//и он начнёт нервничать
+			//Мой вариант
+			var myCustomers = dataSource.Customers
+				.Where(c => c.Orders.Any())
+				.OrderBy(c => c.Orders.Min(x => x.OrderDate).Year)
+				.ThenBy(c => c.Orders.Min(x => x.OrderDate).Month)
+				.ThenByDescending(c => c.Orders.Sum(o => o.Total))
+				.ThenBy(c => c.CompanyName)
+				.Select(c => new { Customer = c.CompanyName, CustomerFrom = c.Orders.First().OrderDate.ToString("MM.yyyy"), Total = c.Orders.Sum(o => o.Total) });
+
+			var customers = dataSource.Customers
             .Where(c => c.Orders.Any())
             .OrderBy(c => c.Orders.First().OrderDate.Year)
             .ThenBy(c => c.Orders.First().OrderDate.Month)
@@ -141,7 +153,7 @@ namespace SampleQueries
             .ThenBy(c => c.CompanyName)
             .Select(c => new { Customer = c.CompanyName, CustomerFrom = c.Orders.First().OrderDate.ToString("MM.yyyy") });
 
-        this.DumpIEnumerable(customers);
+        this.DumpIEnumerable(myCustomers);
     }
 
     [Category("Homework")]
