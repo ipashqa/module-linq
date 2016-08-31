@@ -57,6 +57,8 @@ namespace SampleQueries
 				Suppliers = dataSource.Suppliers.Where(s => s.Country == c.Country && s.City == c.City)
 			}).OrderBy(c => c.Country).ThenBy(c => c.Country);
 
+
+			//Это и есть вариант с группировкой
             var suppliersForCustomer1 = dataSource.Customers.GroupJoin(
                 dataSource.Suppliers,
                 (Customer cust) => new { cust.Country, cust.City },
@@ -69,10 +71,12 @@ namespace SampleQueries
                     Suppliers = suppliers
                 });
 
-            /*
+			//Это уже вариант посложнее. Чтобы его правильно реализовать, нам надо сделать Left Outer Join. Этого можно добиться либо используя классический синтаксис LINQ,
+			//либо применив определённое кунг-фу. Вот ссылка: https://habrahabr.ru/sandbox/39626/
+			/*
              * The second variant (with grouping)
              */
-            var groupedSuppliers = dataSource.Suppliers
+			var groupedSuppliers = dataSource.Suppliers
                 .GroupBy(suppl => new { suppl.Country, suppl.City })
                 .Select(group => new
                 {
